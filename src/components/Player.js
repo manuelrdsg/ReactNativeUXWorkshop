@@ -1,16 +1,24 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import Animated from "react-native-reanimated";
 
-import PlayPauseButton from './PlayPauseButton';
-import { PLAYER_HEIGHT } from '../utils/constants';
+import PlayPauseButton from "./PlayPauseButton";
+import { PLAYER_HEIGHT } from "../utils/constants";
+import { runLinearTiming } from "../utils/animationHelpers";
+
+const { Clock, Value, cond, eq } = Animated;
 
 class Player extends React.PureComponent {
   static defaultProps = {
-    currentSong: '',
-    duration: 50,
+    currentSong: "",
+    duration: 50
   };
 
-  handlePlayToggle = () => {};
+  playingState = new Value(0);
+
+  handlePlayToggle = () => {
+    this.playingState.setValue(cond(eq(this.playingState, 0), 1, 0));
+  };
 
   render() {
     return (
@@ -27,7 +35,7 @@ class Player extends React.PureComponent {
           <View style={styles.controls}>
             <PlayPauseButton
               onPress={this.handlePlayToggle}
-              isPlaying={false}
+              isPlaying={this.playingState}
             />
           </View>
         </View>
@@ -44,59 +52,59 @@ export default Player;
 const styles = StyleSheet.create({
   container: {
     height: PLAYER_HEIGHT,
-    alignItems: 'stretch',
-    position: 'absolute',
+    alignItems: "stretch",
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 2,
     paddingHorizontal: 10,
-    shadowColor: 'black',
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
     elevation: 16,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    backgroundColor: '#f5f9ff',
+    backgroundColor: "#f5f9ff"
   },
   content: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1,
-    alignContent: 'center',
-    alignItems: 'stretch',
+    alignContent: "center",
+    alignItems: "stretch"
   },
   controls: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center"
   },
   textContainer: {
     flex: 1,
     paddingVertical: 10,
-    justifyContent: 'center',
+    justifyContent: "center"
   },
   subTitle: {
-    color: '#333',
-    fontSize: 14,
+    color: "#333",
+    fontSize: 14
   },
   title: {
-    color: '#131313',
+    color: "#131313",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold"
   },
   progressBar: {
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
     height: 3,
     marginBottom: 15,
-    backgroundColor: '#131313',
+    backgroundColor: "#131313"
   },
   progressIndicator: {
     top: -4,
     height: 10,
     width: 10,
     left: 0,
-    position: 'relative',
+    position: "relative",
     borderRadius: 5,
-    backgroundColor: '#3903fc',
-  },
+    backgroundColor: "#3903fc"
+  }
 });
